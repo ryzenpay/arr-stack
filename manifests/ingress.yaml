@@ -4,7 +4,7 @@ metadata:
   name: media-ingress
   namespace: media
 spec:
-  ingressClassName: treafik
+  ingressClassName: traefik
   rules:
   - host: media.ryzen.me
     http:
