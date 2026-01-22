@@ -6,27 +6,27 @@ metadata:
 spec:
   ingressClassName: traefik
   rules:
-  - host: media.ryzen.me
+  - host: sonarr.media.ryzen.me
     http:
       paths:
-      - path: /sonarr
+      - path: /
         pathType: Prefix
         backend:
           service:
             name: media-service
             port:
               number: 8989
-      - path: /lidarr
+      - path: /
         pathType: Prefix
         backend:
           service:
-            name: media-service
+            name: lidarr.media-service
             port:
               number: 8686
-      - path: /radarr
+      - path: /
         pathType: Prefix
         backend:
           service:
-            name: media-service
+            name: radarr.media-service
             port:
               number: 7878
