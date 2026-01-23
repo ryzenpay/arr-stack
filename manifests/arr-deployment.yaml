@@ -32,6 +32,8 @@
             mountPath: /config
           - name: sonarr-data
             mountPath: /data
+          - name: qbittorrent-data
+            mountPath: /downloads
         - name: lidarr
           image: lscr.io/linuxserver/lidarr:latest
           ports:
@@ -48,6 +50,8 @@
             mountPath: /data
           - name: lidarr-config
             mountPath: /config
+          - name: qbittorrent-data
+            mountPath: /downloads
         - name: radarr
           image: lscr.io/linuxserver/radarr:latest
           ports:
@@ -62,8 +66,10 @@
           volumeMounts:
           - name: radarr-data
             mountPath: /data
-          - name: sonarr-config
+          - name: radarr-config
             mountPath: /config
+          - name: qbittorrent-data
+            mountPath: /downloads
         - name: prowlarr
           image: lscr.io/linuxserver/prowlarr:latest
           ports:
@@ -100,3 +106,6 @@
         - name: prowlarr-config
           persistentVolumeClaim:
             claimName: prowlarr-config
+        - name: qbittorrent-data
+          persistentVolumeClaim:
+            claimName: qbittorrent-pvc
