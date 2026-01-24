@@ -20,4 +20,4 @@ spec:
           - secretName: seer-tls
             hosts:
               - seer.media.ryzen.me
-  defaultNamespace: monitoring
+  defaultNamespace: media
