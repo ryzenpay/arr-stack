@@ -1,11 +1,11 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: media-service
+  name: arr-media-service
   namespace: media
 spec:
   selector:
-    app: media
+    app: arr-media
   ports:
     - name: sonarr
       port: 8989
@@ -19,6 +19,3 @@ spec:
     - name: prowlarr
       port: 9696
       targetPort: 9696
-    - name: qbittorrent
-      port: 8080
-      targetPort: 8080
