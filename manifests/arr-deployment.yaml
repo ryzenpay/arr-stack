@@ -89,8 +89,8 @@
           volumeMounts:
           - name: prowlarr-config
             mountPath: /config
-        - name: prowlarr
-          image: lscr.io/linuxserver/prowlarr:latest
+        - name: bazarr
+          image: lscr.io/linuxserver/bazarr:latest
           ports:
           - containerPort: 6767
           env:
