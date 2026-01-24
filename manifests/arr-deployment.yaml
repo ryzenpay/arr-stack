@@ -31,7 +31,7 @@
           - name: sonarr-config
             mountPath: /config
           - name: sonarr-data
-            mountPath: /data
+            mountPath: /tv
           - name: qbittorrent-data
             mountPath: /downloads
         - name: lidarr
@@ -47,7 +47,7 @@
             value: "Etc/UTC"
           volumeMounts:
           - name: lidarr-data
-            mountPath: /data
+            mountPath: /music
           - name: lidarr-config
             mountPath: /config
           - name: qbittorrent-data
@@ -64,8 +64,8 @@
           - name: TZ
             value: "Etc/UTC"
           volumeMounts:
-          - name: radarr-data
-            mountPath: /data
+          - name: content
+            mountPath: /movies
           - name: radarr-config
             mountPath: /config
           - name: qbittorrent-data
@@ -85,15 +85,12 @@
           - name: prowlarr-config
             mountPath: /config
         volumes:
-        - name: sonarr-data
+        - name: content
           persistentVolumeClaim:
-            claimName: sonarr-pvc
-        - name: lidarr-data
+            claimName: content-pvc
+        - name: qbittorrent-data
           persistentVolumeClaim:
-            claimName: lidarr-pvc
-        - name: radarr-data
-          persistentVolumeClaim:
-            claimName: radarr-pvc
+            claimName: qbittorrent-pvc
         - name: sonarr-config
           persistentVolumeClaim:
             claimName: sonarr-config
@@ -106,6 +103,3 @@
         - name: prowlarr-config
           persistentVolumeClaim:
             claimName: prowlarr-config
-        - name: qbittorrent-data
-          persistentVolumeClaim:
-            claimName: qbittorrent-pvc
