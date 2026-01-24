@@ -8,17 +8,15 @@ services:
     environment:
       - VPN_SERVICE_PROVIDER=mullvad
       - VPN_TYPE=wireguard
-      # - SERVER_CITIES=Toronto\
+      # - SERVER_CITIES=Toronto
       - DNS_ADDRESS=1.1.1.1
       - TZ=America/New_York
-      - FIREWALL_VPN_INPUT_PORTS=6881
       - FIREWALL_INPUT_PORTS=8080
+#      - FIREWALL_VPN_INPUT_PORTS=6881
     volumes:
       - ./config/gluetun:/gluetun
     ports:
       - 8080:8080
-      - 6881:6881
-      - 6881:6881/udp
     sysctls:
       - net.ipv4.conf.all.src_valid_mark=1
     healthcheck:
@@ -89,7 +87,7 @@ services:
       - PGID=1000
       - TZ=Etc/UTC
       - WEBUI_PORT=8080
-      - TORRENTING_PORT=6881
+      - TORRENTING_PORT=51820
     volumes:
       - ./config/qbittorrent:/config
       - ./data/qbittorrent:/downloads

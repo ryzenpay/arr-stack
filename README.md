@@ -19,6 +19,9 @@ https://docs.linuxserver.io/images/docker-qbittorrent/
 
 ## Networking
 
+### QBitTorrent
+if using mullvad, use the custom port for torrenting (provided in web gui when generating config)
+^ should default to 51820
 ### Docker
 *arr -> qbitorrent = gluetun:8080
 *arr -> *arr = localhost:<port>
