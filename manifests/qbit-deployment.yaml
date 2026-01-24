@@ -66,7 +66,7 @@
           - name: WEBUI_PORT
             value: "8080"
           - name: TORRENTING_PORT
-            value: "52820"
+            value: "51820"
           volumeMounts:
           - name: qbittorrent-config
             mountPath: /config
