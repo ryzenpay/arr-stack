@@ -6,7 +6,7 @@ metadata:
 spec:
   helm:
     pollingInterval: 1m
-    chart: oci://ghcr.io/fallenbagel/jellyseerr/jellyseerr-chart
+    repo: oci://ghcr.io/fallenbagel/jellyseerr/jellyseerr-chart
     version: 2.7.0
     values:
       ingress:
