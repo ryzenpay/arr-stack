@@ -28,6 +28,8 @@
               value: "mullvad"
             - name: VPN_TYPE
               value: "wireguard"
+            - name: DNS_ADDRESS
+              value: 1.1.1.1
             - name: FIREWALL_INPUT_PORTS
               value: "8080"
             - name: WIREGUARD_PRIVATE_KEY
@@ -56,6 +58,7 @@
           image: lscr.io/linuxserver/qbittorrent:latest
           ports:
             - containerPort: 8080
+            - containerPort: 51820
           env:
           - name: PUID
             value: "1000"
