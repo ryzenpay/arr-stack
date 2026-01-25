@@ -16,8 +16,4 @@ spec:
             paths:
               - path: /
                 pathType: Prefix
-        tls:
-          - secretName: seer-tls
-            hosts:
-              - seer.media.ryzen.me
   defaultNamespace: media

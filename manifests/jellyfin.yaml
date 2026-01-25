@@ -16,10 +16,6 @@ spec:
             paths:
               - path: /
                 pathType: Prefix
-        tls:
-          - secretName: media-tls
-            hosts:
-              - media.ryzen.me
       persistence:
         media:
           existingClaim: content-pvc
