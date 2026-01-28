@@ -82,22 +82,22 @@
             mountPath: /config
           - name: qbittorrent-data
             mountPath: /downloads
-          startupProbe:
-            exec:
-              command:
-                - /bin/sh
-                - -c
-                - curl -sf http://localhost:8080/api/v2/transfer/info | grep -q '"connection_status":"connected"'
-            failureThreshold: 30
-            periodSeconds: 10
-          livenessProbe:
-            exec:
-              command:
-                - /bin/sh
-                - -c
-                - curl -sf http://localhost:8080/api/v2/transfer/info | grep -q '"connection_status":"connected"'
-            periodSeconds: 15
-            failureThreshold: 3
+          # startupProbe: #TODO: needs auth
+          #   exec:
+          #     command:
+          #       - /bin/sh
+          #       - -c
+          #       - curl -sf http://localhost:8080/api/v2/transfer/info | grep -q '"connection_status":"connected"'
+          #   failureThreshold: 30
+          #   periodSeconds: 10
+          # livenessProbe:
+          #   exec:
+          #     command:
+          #       - /bin/sh
+          #       - -c
+          #       - curl -sf http://localhost:8080/api/v2/transfer/info | grep -q '"connection_status":"connected"'
+          #   periodSeconds: 15
+          #   failureThreshold: 3
         volumes:
         - name: qbittorrent-config
           persistentVolumeClaim:
