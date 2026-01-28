@@ -1,19 +1,17 @@
-apiVersion: fleet.cattle.io/v1alpha1
-kind: HelmOp
+apiVersion: helm.cattle.io/v1
+kind: HelmChart
 metadata:
   name: jellyseer
-  namespace: fleet-local
+  namespace: media
 spec:
-  helm:
-    pollingInterval: 1m
-    repo: oci://ghcr.io/fallenbagel/jellyseerr/jellyseerr-chart
-    version: 2.7.0
-    values:
-      ingress:
-        enabled: true
-        hosts:
-          - host: seer.media.ryzen.me
-            paths:
-              - path: /
-                pathType: Prefix
-  defaultNamespace: media
+  repo: oci://ghcr.io/fallenbagel/jellyseerr/jellyseerr-chart
+  version: 2.7.0
+  targetNamespace: media
+  valuesContent: |-
+    ingress:
+      enabled: true
+      hosts:
+        - host: seer.media.ryzen.me
+          paths:
+            - path: /
+              pathType: Prefix

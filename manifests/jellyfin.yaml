@@ -1,24 +1,22 @@
-apiVersion: fleet.cattle.io/v1alpha1
-kind: HelmOp
+apiVersion: helm.cattle.io/v1
+kind: HelmChart
 metadata:
   name: jellyfin
-  namespace: fleet-local
+  namespace: media
 spec:
-  helm:
-    pollingInterval: 1m
-    repo: https://jellyfin.github.io/jellyfin-helm
-    chart: jellyfin
-    values:
-      ingress:
+  chart: jellyfin
+  repo: https://jellyfin.github.io/jellyfin-helm
+  targetNamespace: media
+  valuesContent: |-
+    ingress:
+      enabled: true
+      hosts:
+        - host: media.ryzen.me
+          paths:
+            - path: /
+              pathType: Prefix
+    persistence:
+      media:
+        existingClaim: content-pvc
+      cache:
         enabled: true
-        hosts:
-          - host: media.ryzen.me
-            paths:
-              - path: /
-                pathType: Prefix
-      persistence:
-        media:
-          existingClaim: content-pvc
-        cache:
-          enabled: true
-  defaultNamespace: media

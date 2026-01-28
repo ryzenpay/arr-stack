@@ -1,5 +1,8 @@
 ## Setup
 this currently runs on me ubuntu server running rke2 with rancher  
+easiest install with `treafik, longhorn and rancher/fleet` is to install the `gitops.yaml`  
+ex: `kubectl apply -f gitops.yaml`  
+> or paste it in through rancher UI  
 
 ### Storage
 i reccomend longhorn, which is what the `manifests/storageclass.yaml` will define,  
