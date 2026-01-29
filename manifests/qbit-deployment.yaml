@@ -1,0 +1,107 @@
+  apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    name: media-qbit
+    namespace: media
+    labels:
+      app: media-qbit
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        app: media-qbit
+    template:
+      metadata:
+        labels:
+          app: media-qbit
+      spec:
+        initContainers:
+        - name: wireguard
+          image: qmcgaw/gluetun:latest
+          securityContext:
+            capabilities:
+              add:
+                - NET_ADMIN
+          restartPolicy: Always
+          env:
+            - name: VPN_SERVICE_PROVIDER
+              value: "mullvad"
+            - name: VPN_TYPE
+              value: "wireguard"
+            - name: DNS_ADDRESS
+              value: 1.1.1.1
+            - name: FIREWALL_INPUT_PORTS
+              value: "8080"
+            - name: WIREGUARD_PRIVATE_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: wireguard-secret
+                  key: WIREGUARD_PRIVATE_KEY
+            - name: WIREGUARD_ADDRESSES
+              valueFrom:
+                secretKeyRef:
+                  name: wireguard-secret
+                  key: WIREGUARD_ADDRESSES
+            # - name: SERVER_CITIES
+            #   value: "Toronto"
+          startupProbe:
+            exec:
+              command:
+              - /gluetun-entrypoint
+              - healthcheck
+            periodSeconds: 5
+            failureThreshold: 10
+          livenessProbe:
+            exec:
+              command:
+              - /gluetun-entrypoint
+              - healthcheck
+            periodSeconds: 5
+            timeoutSeconds: 5
+            failureThreshold: 3
+          
+        containers:
+        - name: qbittorrent
+          image: lscr.io/linuxserver/qbittorrent:latest
+          ports:
+            - containerPort: 8080
+            - containerPort: 51820
+          env:
+          - name: PUID
+            value: "1000"
+          - name: PGID
+            value: "1000"
+          - name: TZ
+            value: "Etc/UTC"
+          - name: WEBUI_PORT
+            value: "8080"
+          - name: TORRENTING_PORT
+            value: "51820"
+          volumeMounts:
+          - name: qbittorrent-config
+            mountPath: /config
+          - name: qbittorrent-data
+            mountPath: /downloads
+          # startupProbe: #TODO: needs auth
+          #   exec:
+          #     command:
+          #       - /bin/sh
+          #       - -c
+          #       - curl -sf http://localhost:8080/api/v2/transfer/info | grep -q '"connection_status":"connected"'
+          #   failureThreshold: 30
+          #   periodSeconds: 10
+          # livenessProbe:
+          #   exec:
+          #     command:
+          #       - /bin/sh
+          #       - -c
+          #       - curl -sf http://localhost:8080/api/v2/transfer/info | grep -q '"connection_status":"connected"'
+          #   periodSeconds: 15
+          #   failureThreshold: 3
+        volumes:
+        - name: qbittorrent-config
+          persistentVolumeClaim:
+            claimName: qbittorrent-config
+        - name: qbittorrent-data
+          persistentVolumeClaim:
+            claimName: qbittorrent-pvc

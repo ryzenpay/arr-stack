@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: media-qbit
+  namespace: media
+spec:
+  selector:
+    app: media-qbit
+  ports:
+    - name: qbittorrent
+      port: 8080
+      targetPort: 8080

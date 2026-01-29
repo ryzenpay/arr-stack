@@ -1,0 +1,133 @@
+  apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    name: media-arr
+    namespace: media
+    labels:
+      app: media-arr
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        app: media-arr
+    template:
+      metadata:
+        labels:
+          app: media-arr
+      spec:
+        securityContext:
+          fsGroup: 1000
+        containers:
+        - name: sonarr
+          image: ghcr.io/linuxserver/sonarr:latest
+          ports:
+          - containerPort: 8989
+          env:
+          - name: PUID
+            value: "1000"
+          - name: PGID
+            value: "1000"
+          - name: TZ
+            value: "Etc/UTC"
+          volumeMounts:
+          - name: sonarr-config
+            mountPath: /config
+          - name: content
+            mountPath: /tv
+            subPath: tv
+          - name: qbittorrent-data
+            mountPath: /downloads
+        - name: lidarr
+          image: lscr.io/linuxserver/lidarr:latest
+          ports:
+          - containerPort: 8686
+          env:
+          - name: PUID
+            value: "1000"
+          - name: PGID
+            value: "1000"
+          - name: TZ
+            value: "Etc/UTC"
+          volumeMounts:
+          - name: content
+            mountPath: /music
+            subPath: music
+          - name: lidarr-config
+            mountPath: /config
+          - name: qbittorrent-data
+            mountPath: /downloads
+        - name: radarr
+          image: lscr.io/linuxserver/radarr:latest
+          ports:
+          - containerPort: 7878
+          env:
+          - name: PUID
+            value: "1000"
+          - name: PGID
+            value: "1000"
+          - name: TZ
+            value: "Etc/UTC"
+          volumeMounts:
+          - name: content
+            mountPath: /movies
+            subPath: movies
+          - name: radarr-config
+            mountPath: /config
+          - name: qbittorrent-data
+            mountPath: /downloads
+        - name: prowlarr
+          image: lscr.io/linuxserver/prowlarr:latest
+          ports:
+          - containerPort: 9696
+          env:
+          - name: PUID
+            value: "1000"
+          - name: PGID
+            value: "1000"
+          - name: TZ
+            value: "Etc/UTC"
+          volumeMounts:
+          - name: prowlarr-config
+            mountPath: /config
+        - name: bazarr
+          image: lscr.io/linuxserver/bazarr:latest
+          ports:
+          - containerPort: 6767
+          env:
+          - name: PUID
+            value: "1000"
+          - name: PGID
+            value: "1000"
+          - name: TZ
+            value: "Etc/UTC"
+          volumeMounts:
+          - name: bazarr-config
+            mountPath: /config
+          - name: content
+            mountPath: /movies
+            subPath: movies
+          - name: content
+            mountPath: /tv
+            subPath: tv
+        volumes:
+        - name: content
+          persistentVolumeClaim:
+            claimName: content-pvc
+        - name: qbittorrent-data
+          persistentVolumeClaim:
+            claimName: qbittorrent-pvc
+        - name: sonarr-config
+          persistentVolumeClaim:
+            claimName: sonarr-config
+        - name: lidarr-config
+          persistentVolumeClaim:
+            claimName: lidarr-config
+        - name: radarr-config
+          persistentVolumeClaim:
+            claimName: radarr-config
+        - name: prowlarr-config
+          persistentVolumeClaim:
+            claimName: prowlarr-config
+        - name: bazarr-config
+          persistentVolumeClaim:
+            claimName: bazarr-config

@@ -1,0 +1,22 @@
+apiVersion: helm.cattle.io/v1
+kind: HelmChart
+metadata:
+  name: jellyfin
+  namespace: media
+spec:
+  chart: jellyfin
+  repo: https://jellyfin.github.io/jellyfin-helm
+  targetNamespace: media
+  valuesContent: |-
+    ingress:
+      enabled: true
+      hosts:
+        - host: media.ryzen.me
+          paths:
+            - path: /
+              pathType: Prefix
+    persistence:
+      media:
+        existingClaim: content-pvc
+      cache:
+        enabled: true

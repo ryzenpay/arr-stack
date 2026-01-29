@@ -1,0 +1,17 @@
+apiVersion: helm.cattle.io/v1
+kind: HelmChart
+metadata:
+  name: jellyseer
+  namespace: media
+spec:
+  chart: oci://ghcr.io/fallenbagel/jellyseerr/jellyseerr-chart
+  version: 2.7.0
+  targetNamespace: media
+  valuesContent: |-
+    ingress:
+      enabled: true
+      hosts:
+        - host: seer.media.ryzen.me
+          paths:
+            - path: /
+              pathType: Prefix
