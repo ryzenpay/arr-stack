@@ -1,20 +1,21 @@
   apiVersion: apps/v1
   kind: Deployment
   metadata:
-    name: media-qbit
-    namespace: media
+    name: {{ .Release.Name }}-qbit
+    namespace: {{ Release.Namespace }}
     labels:
-      app: media-qbit
+      app: qbit
   spec:
     replicas: 1
     selector:
       matchLabels:
-        app: media-qbit
+        app: qbit
     template:
       metadata:
         labels:
-          app: media-qbit
+          app: qbit
       spec:
+      {{ if .Values.qbittorrent.vpn.enabled }}
         initContainers:
         - name: wireguard
           image: qmcgaw/gluetun:latest
@@ -25,25 +26,27 @@
           restartPolicy: Always
           env:
             - name: VPN_SERVICE_PROVIDER
-              value: "mullvad"
+              value: {{ .Values.qbittorrent.vpn.config.service_provider }}
             - name: VPN_TYPE
-              value: "wireguard"
+              value: {{ .Values.qbittorrent.vpn.config.type }}
             - name: DNS_ADDRESS
-              value: 1.1.1.1
+              value: {{ .Values.qbittorrent.vpn.config.dns }}
             - name: FIREWALL_INPUT_PORTS
-              value: "8080"
+              value: {{ .Values.qbittorrent.config.web_port | quote }}
             - name: WIREGUARD_PRIVATE_KEY
               valueFrom:
                 secretKeyRef:
-                  name: wireguard-secret
-                  key: WIREGUARD_PRIVATE_KEY
+                  name: {{ .Values.qbittorrent.vpn.secret.name }}
+                  key: {{ .Values.qbittorrent.vpn.secret.privateKeySecretKey }}
             - name: WIREGUARD_ADDRESSES
               valueFrom:
                 secretKeyRef:
-                  name: wireguard-secret
-                  key: WIREGUARD_ADDRESSES
-            # - name: SERVER_CITIES
-            #   value: "Toronto"
+                  name: {{ .Values.qbittorrent.vpn.secret.name }}
+                  key: {{ .Values.qbittorrent.vpn.secret.addressesSecretKey }}
+          {{-  if (.Values.qbittorrent.vpn.config.city | empty) }}
+              name: SERVER_CITIES
+              value: "Toronto"
+          {{-  end }}
           startupProbe:
             exec:
               command:
@@ -59,29 +62,31 @@
             periodSeconds: 5
             timeoutSeconds: 5
             failureThreshold: 3
-          
+      {{ end }}
         containers:
         - name: qbittorrent
           image: lscr.io/linuxserver/qbittorrent:latest
           ports:
-            - containerPort: 8080
-            - containerPort: 51820
+            - containerPort: {{ .Values.qbittorrent.config.web_port }}
+            - containerPort: {{ .Values.qbittorrent.config.torrenting_port }}
           env:
           - name: PUID
             value: "1000"
           - name: PGID
             value: "1000"
           - name: TZ
-            value: "Etc/UTC"
+            value: {{ .Values.timezone | quote }}
           - name: WEBUI_PORT
-            value: "8080"
+            value: {{ .Values.qbittorrent.config.web_port | quote }}
           - name: TORRENTING_PORT
-            value: "51820"
+            value: {{ .Values.qbittorrent.config.torrenting_port | quote }}
           volumeMounts:
           - name: qbittorrent-config
             mountPath: /config
-          - name: qbittorrent-data
+        {{- if .Values.qbittorrent.persistent.enabled }}
+            name: {{ .Values.qbittorrent.persistent.name }}
             mountPath: /downloads
+        {{- end }}
           # startupProbe: #TODO: needs auth
           #   exec:
           #     command:
@@ -99,9 +104,9 @@
           #   periodSeconds: 15
           #   failureThreshold: 3
         volumes:
-        - name: qbittorrent-config
+        - name: qbit-config
           persistentVolumeClaim:
-            claimName: qbittorrent-config
-        - name: qbittorrent-data
+            claimName: qbit-config
+        - name: {{ .Values.qbittorrent.persistent.name }}
           persistentVolumeClaim:
-            claimName: qbittorrent-pvc
+            claimName: {{ .Values.qbittorrent.persistent.name }}

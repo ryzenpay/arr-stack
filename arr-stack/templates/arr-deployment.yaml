@@ -1,19 +1,19 @@
   apiVersion: apps/v1
   kind: Deployment
   metadata:
-    name: media-arr
-    namespace: media
+    name: {{ .Release.Name }}-arr
+    namespace: {{ Release.Namespace }}
     labels:
-      app: media-arr
+      app: arr
   spec:
     replicas: 1
     selector:
       matchLabels:
-        app: media-arr
+        app: arr
     template:
       metadata:
         labels:
-          app: media-arr
+          app: arr
       spec:
         securityContext:
           fsGroup: 1000
@@ -28,15 +28,17 @@
           - name: PGID
             value: "1000"
           - name: TZ
-            value: "Etc/UTC"
+            value: {{ .Values.timezone }}
           volumeMounts:
           - name: sonarr-config
             mountPath: /config
-          - name: content
+          - name: content-data
             mountPath: /tv
             subPath: tv
-          - name: qbittorrent-data
+          {{- if .Values.qbittorrent.persistent.enabled }}
+            name: qbittorrent-data
             mountPath: /downloads
+          {{- end }}
         - name: lidarr
           image: lscr.io/linuxserver/lidarr:latest
           ports:
@@ -47,15 +49,17 @@
           - name: PGID
             value: "1000"
           - name: TZ
-            value: "Etc/UTC"
+            value: {{ .Values.timezone }}
           volumeMounts:
-          - name: content
+          - name: content-data
             mountPath: /music
             subPath: music
           - name: lidarr-config
             mountPath: /config
-          - name: qbittorrent-data
+          {{- if .Values.qbittorrent.persistent.enabled }}
+            name: qbittorrent-data
             mountPath: /downloads
+          {{- end }}
         - name: radarr
           image: lscr.io/linuxserver/radarr:latest
           ports:
@@ -66,15 +70,17 @@
           - name: PGID
             value: "1000"
           - name: TZ
-            value: "Etc/UTC"
+            value: {{ .Values.timezone }}
           volumeMounts:
-          - name: content
+          - name: content-data
             mountPath: /movies
             subPath: movies
           - name: radarr-config
             mountPath: /config
-          - name: qbittorrent-data
+          {{- if .Values.qbittorrent.persistent.enabled }}
+            name: qbittorrent-data
             mountPath: /downloads
+          {{- end }}
         - name: prowlarr
           image: lscr.io/linuxserver/prowlarr:latest
           ports:
@@ -85,7 +91,7 @@
           - name: PGID
             value: "1000"
           - name: TZ
-            value: "Etc/UTC"
+            value: {{ .Values.timezone }}
           volumeMounts:
           - name: prowlarr-config
             mountPath: /config
@@ -99,23 +105,25 @@
           - name: PGID
             value: "1000"
           - name: TZ
-            value: "Etc/UTC"
+            value: {{ .Values.timezone }}
           volumeMounts:
           - name: bazarr-config
             mountPath: /config
-          - name: content
+          - name: content-data
             mountPath: /movies
             subPath: movies
           - name: content
             mountPath: /tv
             subPath: tv
         volumes:
-        - name: content
+        - name: arr-data
           persistentVolumeClaim:
-            claimName: content-pvc
-        - name: qbittorrent-data
+            claimName: arr-data
+        {{- if .Values.qbittorrent.persistent.enabled }}
+          name: qbit-data
           persistentVolumeClaim:
-            claimName: qbittorrent-pvc
+            claimName: qbit-data
+        {{- end }}
         - name: sonarr-config
           persistentVolumeClaim:
             claimName: sonarr-config

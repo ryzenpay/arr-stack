@@ -1,0 +1,34 @@
+timezone: "Etc/UTC"
+ingress:
+  enabled: true
+  className: "traefik"
+  domain: "media.example.com"
+
+qbittorrent:
+  config:
+    web_port: 8080
+    torrenting_port: 51820
+  persistent:
+    enabled: true
+    size: 100Gi
+    storageClass: ""
+    name: qbit-data
+  vpn:
+    enabled: true
+    healthcheck: true
+    config:
+      service_provider: mullvad
+      type: wireguard
+      dns: 1.1.1.1
+      cities: ""
+    secret:
+      existing: true
+      name: wireguard-secret
+      privateKeySecretKey: WIREGUARD_PRIVATE_KEY
+      addressesSecretKey: WIREGUARD_ADDRESSES
+
+arr:
+  persistent:
+    size: 100Gi
+    storageClass: ""
+    name: arr-data

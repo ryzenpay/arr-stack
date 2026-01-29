@@ -1,0 +1,6 @@
+apiVersion: v2
+name: arr-stack
+description: kubernetes arr stack using linuxserver images
+type: application
+version: 0.1.0
+appVersion: "1.16.0"
