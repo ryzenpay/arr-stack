@@ -36,6 +36,7 @@ metadata:
   labels:
     app: lidarr-config
 spec:
+  storageClassName: retain
   accessModes:
     - ReadWriteOnce
   resources:
@@ -50,6 +51,7 @@ metadata:
   labels:
     app: radarr-config
 spec:
+  storageClassName: retain
   accessModes:
     - ReadWriteOnce
   resources:
@@ -64,6 +66,7 @@ metadata:
   labels:
     app: sonarr-config
 spec:
+  storageClassName: retain
   accessModes:
     - ReadWriteOnce
   resources:
@@ -78,6 +81,7 @@ metadata:
   labels:
     app: prowlarr-config
 spec:
+  storageClassName: retain
   accessModes:
     - ReadWriteOnce
   resources:
@@ -92,6 +96,7 @@ metadata:
   labels:
     app: qbittorrent-config
 spec:
+  storageClassName: retain
   accessModes:
     - ReadWriteOnce
   resources:
@@ -106,6 +111,7 @@ metadata:
   labels:
     app: bazarr-config
 spec:
+  storageClassName: retain
   accessModes:
     - ReadWriteOnce
   resources:
