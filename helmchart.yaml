@@ -1,0 +1,28 @@
+apiVersion: helm.cattle.io/v1
+kind: HelmChart
+metadata:
+  name: arr-stack
+  namespace: media
+spec:
+  chart: oci://harbor.ryzen.me/library/arr-stack
+  version: 0.1.0
+  targetNamespace: media
+  createNamespace: true
+  valuesContent: |-
+    ingress:
+      domain: media.ryzen.me
+    qbittorrent:
+      persistent:
+        size: 1Ti
+        storageClass: media
+      vpn:
+        secret:
+          existing: true
+          name: wireguard-secret
+          privateKeySecretKey: WIREGUARD_PRIVATE_KEY
+          addressesSecretKey: WIREGUARD_ADDRESSES
+    arr:
+      persistent:
+        size: 1Ti
+        storageClass: media
+

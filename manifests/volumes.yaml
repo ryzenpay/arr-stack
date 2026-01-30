@@ -6,7 +6,7 @@ metadata:
   labels:
     app: content-pvc
 spec:
-  storageClassName: media-storage
+  storageClassName: media
   accessModes:
     - ReadWriteOnce
   resources:
@@ -21,7 +21,7 @@ metadata:
   labels:
     app: qbittorrent-pvc
 spec:
-  storageClassName: media-storage
+  storageClassName: media
   accessModes:
     - ReadWriteOnce
   resources:

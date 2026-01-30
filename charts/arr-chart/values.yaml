@@ -1,8 +1,8 @@
-timezone: "Etc/UTC"
+timezone: Etc/UTC
 ingress:
   enabled: true
-  className: "traefik"
-  domain: "media.example.com"
+  className: traefik
+  domain: media.example.com
 
 qbittorrent:
   config:
