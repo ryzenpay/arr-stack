@@ -5,4 +5,4 @@ metadata:
 provisioner: driver.longhorn.io
 parameters:
   diskSelector: "media"
-  numberOfReplicas: 1
+  numberOfReplicas: "1"
