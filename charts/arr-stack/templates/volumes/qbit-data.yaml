@@ -1,0 +1,16 @@
+{{ if .Values.qbittorrent.persistent.enabled }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ .Values.qbittorrent.persistent.name }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: qbit-data
+spec:
+  storageClassName: {{ .Values.arr.persistent.storageClass }}
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: {{ .Values.qbittorrent.persistent.size }}
+{{ end }}

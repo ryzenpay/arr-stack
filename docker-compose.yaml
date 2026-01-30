@@ -93,6 +93,13 @@ services:
     ports:
       - 6767:6767
     restart: unless-stopped
+  configarr:
+    image: ghcr.io/raydak-labs/configarr:latest
+    container_name: configarr
+    environment:
+      - TZ=Etc/UTC
+    volumes:
+      - ./config/configarr:/config
   qbittorrent:
     image: lscr.io/linuxserver/qbittorrent:latest
     container_name: qbittorrent

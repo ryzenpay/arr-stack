@@ -16,7 +16,7 @@ spec:
         app: arr
     spec:
       securityContext:
-        fsGroup: 1000
+        fsGroup: {{ .Values.pgid }}
       containers:
       - name: sonarr
         image: ghcr.io/linuxserver/sonarr:latest
@@ -24,9 +24,9 @@ spec:
         - containerPort: 8989
         env:
         - name: PUID
-          value: "1000"
+          value: {{ .Values.puid | quote }}
         - name: PGID
-          value: "1000"
+          value: {{ .Values.pgid | quote }}
         - name: TZ
           value: {{ .Values.timezone }}
         volumeMounts:
@@ -45,9 +45,9 @@ spec:
         - containerPort: 8686
         env:
         - name: PUID
-          value: "1000"
+          value: {{ .Values.puid | quote }}
         - name: PGID
-          value: "1000"
+          value: {{ .Values.pgid | quote }}
         - name: TZ
           value: {{ .Values.timezone }}
         volumeMounts:
@@ -66,9 +66,9 @@ spec:
         - containerPort: 7878
         env:
         - name: PUID
-          value: "1000"
+          value: {{ .Values.puid | quote }}
         - name: PGID
-          value: "1000"
+          value: {{ .Values.pgid | quote }}
         - name: TZ
           value: {{ .Values.timezone }}
         volumeMounts:
@@ -87,9 +87,9 @@ spec:
         - containerPort: 9696
         env:
         - name: PUID
-          value: "1000"
+          value: {{ .Values.puid | quote }}
         - name: PGID
-          value: "1000"
+          value: {{ .Values.pgid | quote }}
         - name: TZ
           value: {{ .Values.timezone }}
         volumeMounts:
@@ -101,9 +101,9 @@ spec:
         - containerPort: 6767
         env:
         - name: PUID
-          value: "1000"
+          value: {{ .Values.puid | quote }}
         - name: PGID
-          value: "1000"
+          value: {{ .Values.pgid | quote }}
         - name: TZ
           value: {{ .Values.timezone }}
         volumeMounts:

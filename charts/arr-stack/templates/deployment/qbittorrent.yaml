@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Release.Name }}-qbit
+  name: {{ .Release.Name }}-qbittorrent
   namespace: {{ .Release.Namespace }}
   labels:
     app: qbit
@@ -15,6 +15,8 @@ spec:
       labels:
         app: qbit
     spec:
+      securityContext:
+        fsGroup: {{ .Values.pgid }}
     {{ if .Values.qbittorrent.vpn.enabled }}
       initContainers:
       - name: wireguard
@@ -71,9 +73,9 @@ spec:
           - containerPort: {{ .Values.qbittorrent.config.torrenting_port }}
         env:
         - name: PUID
-          value: "1000"
+          value: {{ .Values.puid | quote }}
         - name: PGID
-          value: "1000"
+          value: {{ .Values.pgid | quote }}
         - name: TZ
           value: {{ .Values.timezone | quote }}
         - name: WEBUI_PORT
@@ -86,6 +88,10 @@ spec:
       {{- if .Values.qbittorrent.persistent.enabled }}
         - name: qbit-data
           mountPath: /downloads
+      {{- end }}
+      {{- if not (.Values.qbittorrent.config.configMap | empty) }}
+        - name: qbit-configmap
+          mountPath: /config/qBittorrent
       {{- end }}
         # startupProbe: #TODO: needs auth
         #   exec:
@@ -111,4 +117,9 @@ spec:
       - name: {{ .Values.qbittorrent.persistent.name }}
         persistentVolumeClaim:
           claimName: qbit-data
+      {{- end }}
+      {{- if not (.Values.qbittorrent.config.configMap | empty) }}
+      - name: qbit-configmap
+        configMap:
+          name: qbit-config
       {{- end }}

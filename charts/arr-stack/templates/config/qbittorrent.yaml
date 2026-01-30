@@ -1,0 +1,10 @@
+{{ if not (.Values.qbittorrent.config.configMap | empty) }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: qbit-config
+  namespace: {{ .Release.Namespace }}
+data:
+  qBittorrent.conf: |
+{{ .Values.qbittorrent.config.configMap | indent 4 }}
+{{ end }}

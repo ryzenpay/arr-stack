@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ .Values.arr.persistent.name }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: arr-data
+spec:
+  storageClassName: {{ .Values.arr.persistent.storageClass }}
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: {{ .Values.arr.persistent.size }}

@@ -1,4 +1,8 @@
 timezone: Etc/UTC
+
+puid: 1000
+pgid: 1000
+
 ingress:
   enabled: true
   className: traefik
@@ -8,6 +12,7 @@ qbittorrent:
   config:
     web_port: 8080
     torrenting_port: 51820
+    configMap: "" # configmap
   persistent:
     enabled: true
     size: 100Gi
@@ -20,12 +25,14 @@ qbittorrent:
       service_provider: mullvad
       type: wireguard
       dns: 1.1.1.1
-      cities: ""
+      cities: "" #https://raw.githubusercontent.com/qdm12/gluetun/master/internal/storage/servers.json
     secret:
       existing: true
       name: wireguard-secret
       privateKeySecretKey: WIREGUARD_PRIVATE_KEY
+      privateKey: ""
       addressesSecretKey: WIREGUARD_ADDRESSES
+      addresses: ""
 
 arr:
   persistent:
