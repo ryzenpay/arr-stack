@@ -15,8 +15,10 @@ spec:
     metadata:
       labels:
         app: metrics
+      {{- with .Values.metrics.podAnnotations }}
       annotations:
-        {{- toYaml .Values.metrics.podAnnotations | nindent 4 }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
     spec:
       containers:
       - name: scraparr
