@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ .Release.Name }}-arr-metrics-service
+  name: {{ .Release.Name }}-metrics-service
   namespace: {{ .Release.Namespace }}
 spec:
   selector:

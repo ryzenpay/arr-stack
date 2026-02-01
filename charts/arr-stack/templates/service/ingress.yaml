@@ -24,7 +24,7 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: media-arr
+            name: {{ .Release.Name }}-service
             port:
               number: 8686
   - host: {{ print "radarr." .Values.ingress.domain }}
