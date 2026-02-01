@@ -1,0 +1,39 @@
+apiVersion: fleet.cattle.io/v1alpha1
+kind: HelmOp
+metadata:
+  name: arr-stack
+  namespace: fleet-local
+spec:
+  helm:
+    pollingInterval: 1m
+    repo: oci://harbor.ryzen.me/library/arr-stack
+    version: 0.2.0
+    values:
+      ingress:
+        domain: media.ryzen.me
+      qbittorrent:
+        persistent:
+          size: 1Ti
+          storageClass: media
+        vpn:
+          secret:
+            existing: false
+            privateKeySecretKey: WIREGUARD_PRIVATE_KEY
+            addressesSecretKey: WIREGUARD_ADDRESSES
+      arr:
+        persistent:
+          size: 1Ti
+          storageClass: media
+        config:
+          storageClass: retain
+      metrics:
+        enabled: true
+        podAnnotations:
+          signoz.io/path: /metrics
+          signoz.io/port: '7100'
+          signoz.io/scrape: 'true'
+      discord:
+        enabled: true
+        secret:
+          existing: false
+  defaultNamespace: media

@@ -28,7 +28,7 @@ qbittorrent:
       cities: "" #https://raw.githubusercontent.com/qdm12/gluetun/master/internal/storage/servers.json
     secret:
       existing: true
-      name: wireguard-secret
+      name: arr-secret
       privateKeySecretKey: WIREGUARD_PRIVATE_KEY
       privateKey: ""
       addressesSecretKey: WIREGUARD_ADDRESSES
@@ -39,3 +39,18 @@ arr:
     size: 100Gi
     storageClass: ""
     name: arr-data
+  config:
+    storageClass: ""
+    size: 1Gi
+  
+metrics:
+  enabled: false
+  podAnnotations: {}
+
+discord:
+  enabled: false
+  secret:
+    existing: true
+    name: arr-secret
+    tokenSecretKey: DISCORD_TOKEN
+    token: ""

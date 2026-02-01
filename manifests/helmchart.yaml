@@ -4,7 +4,7 @@ metadata:
   name: arr-stack
 spec:
   chart: oci://harbor.ryzen.me/library/arr-stack
-  version: 0.1.0
+  version: 0.2.0
   targetNamespace: media
   createNamespace: true
   valuesContent: |-
@@ -24,4 +24,17 @@ spec:
       persistent:
         size: 1Ti
         storageClass: media
+      config:
+        storageClass: retain
+    
+    metrics:
+      enabled: true
+      podAnnotations:
+        signoz.io/path: /metrics
+        signoz.io/port: '7100'
+        signoz.io/scrape: 'true'
+
+    discord:
+      enabled: true
+
 

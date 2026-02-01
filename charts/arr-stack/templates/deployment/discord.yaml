@@ -1,0 +1,42 @@
+{{ if .Values.discord.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-discord
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: discord
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: discord
+  template:
+    metadata:
+      labels:
+        app: discord
+    spec:
+      containers:
+      - name: doplarr
+        image: ghcr.io/kiranshila/doplarr:latest
+        env:
+        - name: SONARR__URL
+          value: http://arr:8989
+        - name: SONARR__API
+          valueFrom:
+            secretKeyRef:
+              name: arr-secret
+              key: SONARR_API
+        - name: RADARR__URL
+          value: http://arr:7878
+        - name: RADARR__API
+          valueFrom:
+            secretKeyRef:
+              name: arr-secret
+              key: RADARR_API
+        - name: DISCORD__TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.discord.secret.name }}
+              key: {{ .Values.discord.secret.tokenSecretKey }}
+{{ end }}

@@ -6,8 +6,9 @@ metadata:
   labels:
     app: bazarr-config
 spec:
+  storageClassName: {{ .Values.arr.config.storageClass }}
   accessModes:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 1Gi
+      storage: {{ .Values.arr.config.size }}

@@ -1,0 +1,62 @@
+{{ if .Values.metrics.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-metrics
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: metrics
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: metrics
+  template:
+    metadata:
+      labels:
+        app: metrics
+      annotations:
+        {{- toYaml .Values.metrics.podAnnotations | nindent 4 }}
+    spec:
+      containers:
+      - name: scraparr
+        image: ghcr.io/thecfu/scraparr:latest
+        ports:
+        - containerPort: 7100
+        env:
+        - name: SONARR_URL
+          value: http://arr:8989
+        - name: SONARR_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: arr-secret
+              key: SONARR_API
+        - name: RADARR_URL
+          value: http://arr:7878
+        - name: RADARR_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: arr-secret
+              key: RADARR_API
+        - name: LIDARR_URL
+          value: http://arr:8686
+        - name: LIDARR_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: arr-secret
+              key: LIDARR_API
+        - name: PROWLARR_URL
+          value: http://arr:9696
+        - name: PROWLARR_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: arr-secret
+              key: PROWLARR_API
+        - name: BAZARR_URL
+          value: http://arr:6767
+        - name: BAZARR_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: arr-secret
+              key: BAZARR_API
+{{ end }}

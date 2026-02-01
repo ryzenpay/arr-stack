@@ -1,0 +1,14 @@
+{{ if .Values.metrics.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-arr-metrics-service
+  namespace: {{ .Release.Namespace }}
+spec:
+  selector:
+    app: metrics
+  ports:
+    - name: scraparr
+      port: 7100
+      targetPort: 7100
+{{ end }}
