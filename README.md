@@ -21,6 +21,13 @@ i reccomend longhorn, which is what the `/manifests/storageclass.yaml` will defi
 in longhorn, attach a "media" tag to the drives you would like to store your media  
 > or remove the media tag if u dont care about seperation  
 
+### Networking
+- *arr -> *arr: `http://arr-stack:<port>`  
+- *arr -> qbit: `http://arr-qbit:<port>`
+- *arr -> jackett: `http://jackett:9117`
+- jackett -> flaresolverr: `http://flaresolverr:8191`
+
+
 ### Docker Compose
 1. copy `.env.example` to `.env`
 2. fill in the values in `.env`
@@ -29,6 +36,7 @@ in longhorn, attach a "media" tag to the drives you would like to store your med
 ## Config
 i dont recommend enabling "remove completed" from *arr download clients as they get stuck while qbittorrent begins seeding,  
 to then prevent qbittorrent from taking all space, set seeding policies in tools -> options -> qbittorrent -> seeding limits  
+
 
 ## Lidarr
 https://lidarr.audio  
