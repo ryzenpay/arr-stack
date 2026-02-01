@@ -14,7 +14,7 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: {{ .Release.Name }}-arr-service
+            name: {{ .Release.Name }}-service
             port:
               number: 8989
   - host: {{ print "lidarr." .Values.ingress.domain }}
@@ -34,7 +34,7 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: {{ .Release.Name }}-arr-service
+            name: {{ .Release.Name }}-service
             port:
               number: 7878
   - host: {{ print "prowlarr." .Values.ingress.domain }}
@@ -44,7 +44,7 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: {{ .Release.Name }}-arr-service
+            name: {{ .Release.Name }}-service
             port:
               number: 9696
   - host: {{ print "bazarr." .Values.ingress.domain }}
@@ -54,7 +54,7 @@ spec:
           pathType: Prefix
           backend:
             service:
-              name: {{ .Release.Name }}-arr-service
+              name: {{ .Release.Name }}-service
               port:
                 number: 6767
   - host: {{ print "qbit." .Values.ingress.domain }}
