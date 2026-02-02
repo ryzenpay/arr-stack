@@ -21,14 +21,14 @@ spec:
         image: ghcr.io/kiranshila/doplarr:latest
         env:
         - name: SONARR__URL
-          value: http://arr-stack:8989
+          value: {{ print "http://" .Release.Name ":8989" }}
         - name: SONARR__API
           valueFrom:
             secretKeyRef:
               name: arr-api-secret
               key: SONARR_API
         - name: RADARR__URL
-          value: http://arr-stack:7878
+          value: {{ print "http://" .Release.Name ":7878" }}
         - name: RADARR__API
           valueFrom:
             secretKeyRef:
