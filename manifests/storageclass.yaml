@@ -3,6 +3,7 @@ apiVersion: storage.k8s.io/v1
 metadata:
   name: media
 provisioner: driver.longhorn.io
+allowVolumeExpansion: true
 parameters:
   diskSelector: "media"
   numberOfReplicas: "1"
