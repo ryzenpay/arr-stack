@@ -121,7 +121,7 @@ spec:
             command:
               - /bin/sh
               - -c
-              - curl -sf http://localhost:{{ .Values.qbittorrent.config.web_port }}/api/v2/transfer/info | grep -q '"connection_status":"connected"'
+              - curl -sf http://localhost:{{ .Values.qbittorrent.config.web_port }}/api/v2/transfer/info | grep -Eq '"connection_status":"(connected|disconnected)"'
           periodSeconds: 15
           failureThreshold: 3
       {{ end }}
