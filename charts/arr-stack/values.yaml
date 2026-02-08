@@ -33,6 +33,7 @@ qbittorrent:
       privateKey: ""
       addressesSecretKey: WIREGUARD_ADDRESSES
       addresses: ""
+  livenessProbe: true
 
 arr:
   persistent:

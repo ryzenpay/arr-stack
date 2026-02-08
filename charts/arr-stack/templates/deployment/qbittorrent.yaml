@@ -93,6 +93,7 @@ spec:
         - name: qbit-configmap
           mountPath: /config/qBittorrent
       {{- end }}
+      {{ if .Values.qbittorrent.livenessProbe }}
         lifecycle:
           postStart:
             exec:
@@ -123,6 +124,7 @@ spec:
               - curl -sf http://localhost:{{ .Values.qbittorrent.config.web_port }}/api/v2/transfer/info | grep -q '"connection_status":"connected"'
           periodSeconds: 15
           failureThreshold: 3
+      {{ end }}
       volumes:
       - name: qbit-config
         persistentVolumeClaim:
