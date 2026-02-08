@@ -54,4 +54,11 @@ spec:
             secretKeyRef:
               name: arr-api-secret
               key: PROWLARR_API
+        - name: READARR_URL
+          value: {{ print "http://" .Release.Name ":8787" }}
+        - name: READARR_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: arr-api-secret
+              key: READARR_API
 {{ end }}
