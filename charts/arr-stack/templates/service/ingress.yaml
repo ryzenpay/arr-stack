@@ -14,7 +14,7 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: {{ .Release.Name }}
+            name: arr-stack
             port:
               number: 8989
   - host: {{ print "lidarr." .Values.ingress.domain }}
@@ -24,7 +24,7 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: {{ .Release.Name }}
+            name: arr-stack
             port:
               number: 8686
   - host: {{ print "radarr." .Values.ingress.domain }}
@@ -34,7 +34,7 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: {{ .Release.Name }}
+            name: arr-stack
             port:
               number: 7878
   - host: {{ print "prowlarr." .Values.ingress.domain }}
@@ -44,7 +44,7 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: {{ .Release.Name }}
+            name: arr-stack
             port:
               number: 9696
   - host: {{ print "bazarr." .Values.ingress.domain }}
@@ -54,7 +54,7 @@ spec:
           pathType: Prefix
           backend:
             service:
-              name: {{ .Release.Name }}
+              name: arr-stack
               port:
                 number: 6767
   - host: {{ print "readarr." .Values.ingress.domain }}
@@ -64,7 +64,7 @@ spec:
           pathType: Prefix
           backend:
             service:
-              name: {{ .Release.Name }}
+              name: arr-stack
               port:
                 number: 8787
   - host: {{ print "qbit." .Values.ingress.domain }}
@@ -74,7 +74,7 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: {{ .Release.Name }}-qbit
+            name: arr-qbit
             port:
               number: {{ .Values.qbittorrent.config.web_port }}
 {{ end }}
