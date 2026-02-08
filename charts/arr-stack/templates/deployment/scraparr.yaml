@@ -2,7 +2,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Release.Name }}-metrics
+  name: arr-metrics
   namespace: {{ .Release.Namespace }}
   labels:
     app: metrics
