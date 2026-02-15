@@ -21,6 +21,37 @@ spec:
             name: arr-config-secret
             privateKeySecretKey: WIREGUARD_PRIVATE_KEY
             addressesSecretKey: WIREGUARD_ADDRESSES
+        extraEnv:
+          - name: MAM_ID
+            valueFrom:
+              secretKeyRef:
+                name: media-mam-secret
+                key: mam_id
+        lifecycle:
+          postStart:
+            exec:
+              command:
+                - "/bin/sh"
+                - "-c"
+                - |
+                  CONFIG_FILE="/config/qBittorrent/qBittorrent.conf"
+                  echo "Waiting for $CONFIG_FILE to exist..."
+                  for i in $(seq 1 40); do
+                    if [ -f "$CONFIG_FILE" ]; then
+                      break
+                    fi
+                    sleep 0.5
+                  done
+                  echo "Config found. Patching WebUI\LocalHostAuth..."
+                  # If setting exists, replace it; otherwise append after [Preferences]
+                  if grep -Fq "WebUI\LocalHostAuth=" "$CONFIG_FILE"; then
+                    sed -i 's|WebUI\\LocalHostAuth=.*|WebUI\\LocalHostAuth=false|' "$CONFIG_FILE"
+                  else
+                    sed -i '/^\[Preferences\]/a WebUI\\LocalHostAuth=false' "$CONFIG_FILE"
+                  fi
+
+                  echo "Setting MAM ip"
+                  curl -c ~/mam.cookies -b "mam_id=$MAM_ID" https://t.myanonamouse.net/json/dynamicSeedbox.php
       arr:
         persistent:
           size: 2Ti

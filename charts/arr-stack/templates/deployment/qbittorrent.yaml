@@ -82,6 +82,9 @@ spec:
           value: {{ .Values.qbittorrent.config.web_port | quote }}
         - name: TORRENTING_PORT
           value: {{ .Values.qbittorrent.config.torrenting_port | quote }}
+        {{- with .Values.qbittorrent.extraEnv }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
         volumeMounts:
         - name: qbit-config
           mountPath: /config
@@ -93,29 +96,11 @@ spec:
         - name: qbit-configmap
           mountPath: /config/qBittorrent
       {{- end }}
-      {{ if .Values.qbittorrent.livenessProbe }}
+      {{- if .Values.qbittorrent.lifecycle }}
         lifecycle:
-          postStart:
-            exec:
-              command:
-                - "/bin/sh"
-                - "-c"
-                - |
-                  CONFIG_FILE="/config/qBittorrent/qBittorrent.conf"
-                  echo "Waiting for $CONFIG_FILE to exist..."
-                  for i in $(seq 1 40); do
-                    if [ -f "$CONFIG_FILE" ]; then
-                      break
-                    fi
-                    sleep 0.5
-                  done
-                  echo "Config found. Patching WebUI\LocalHostAuth..."
-                  # If setting exists, replace it; otherwise append after [Preferences]
-                  if grep -Fq "WebUI\LocalHostAuth=" "$CONFIG_FILE"; then
-                    sed -i 's|WebUI\\LocalHostAuth=.*|WebUI\\LocalHostAuth=false|' "$CONFIG_FILE"
-                  else
-                    sed -i '/^\[Preferences\]/a WebUI\\LocalHostAuth=false' "$CONFIG_FILE"
-                  fi
+        {{- toYaml .Values.qbittorrent.lifecycle | nindent 10 }}
+      {{- end }}
+      {{ if .Values.qbittorrent.livenessProbe }}
         livenessProbe:
           exec:
             command:

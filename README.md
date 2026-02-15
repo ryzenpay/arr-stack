@@ -74,3 +74,5 @@ https://github.com/kiranshila/Doplarr
 -[ ] configarr (https://configarr.de)  
 -[x] scraparr (https://github.com/imgios/scraparr)  
 -[ ] helm chart values documentation
+-[x] qbit lifecycle support
+-[x] qbit env var support
