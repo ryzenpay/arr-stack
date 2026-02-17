@@ -130,7 +130,7 @@ spec:
           mountPath: /downloads
         {{- end }}
       volumes:
-      - name: {{ .Values.arr.persistent.name }}
+      - name: arr-data
         persistentVolumeClaim:
           claimName: arr-data
       {{- if .Values.qbittorrent.persistent.enabled }}
