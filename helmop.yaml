@@ -58,6 +58,7 @@ spec:
           storageClass: media
         config:
           storageClass: retain
+          size: 5Gi
       metrics:
         enabled: true
         podAnnotations:
