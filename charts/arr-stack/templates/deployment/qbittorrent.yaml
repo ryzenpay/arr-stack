@@ -55,7 +55,7 @@ spec:
               secretKeyRef:
                 name: {{ .Values.qbittorrent.vpn.secret.name }}
                 key: {{ .Values.qbittorrent.vpn.secret.addressesSecretKey }}
-        {{-  if (.Values.qbittorrent.vpn.config.city | empty) }}
+        {{-  if .Values.qbittorrent.vpn.config.city }}
           - name: SERVER_CITIES
             value: {{ .Values.qbittorrent.vpn.config.cities }}
         {{-  end }}
@@ -102,7 +102,7 @@ spec:
         - name: qbit-data
           mountPath: /downloads
       {{- end }}
-      {{- if not (.Values.qbittorrent.config.configMap | empty) }}
+      {{- if .Values.qbittorrent.config.configMap }}
         - name: qbit-configmap
           mountPath: /config/qBittorrent
       {{- end }}
@@ -129,7 +129,7 @@ spec:
         persistentVolumeClaim:
           claimName: qbit-data
       {{- end }}
-      {{- if not (.Values.qbittorrent.config.configMap | empty) }}
+      {{- if .Values.qbittorrent.config.configMap }}
       - name: qbit-configmap
         configMap:
           name: qbit-config

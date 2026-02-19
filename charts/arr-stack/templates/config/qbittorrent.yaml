@@ -1,4 +1,4 @@
-{{ if not (.Values.qbittorrent.config.configMap | empty) }}
+{{ if .Values.qbittorrent.config.configMap }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
