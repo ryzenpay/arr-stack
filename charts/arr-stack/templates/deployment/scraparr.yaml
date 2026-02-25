@@ -27,35 +27,35 @@ spec:
         - containerPort: 7100
         env:
         - name: SONARR_URL
-          value: {{ print "http://" .Release.Name ":8989" }}
+          value: http://arr-stack:8989
         - name: SONARR_API_KEY
           valueFrom:
             secretKeyRef:
               name: arr-api-secret
               key: SONARR_API
         - name: RADARR_URL
-          value: {{ print "http://" .Release.Name ":7878" }}
+          value: http://arr-stack:7878
         - name: RADARR_API_KEY
           valueFrom:
             secretKeyRef:
               name: arr-api-secret
               key: RADARR_API
         - name: LIDARR_URL
-          value: {{ print "http://" .Release.Name ":8686" }}
+          value: http://arr-stack:8686
         - name: LIDARR_API_KEY
           valueFrom:
             secretKeyRef:
               name: arr-api-secret
               key: LIDARR_API
         - name: PROWLARR_URL
-          value: {{ print "http://" .Release.Name ":9696" }}
+          value: http://arr-stack:9696
         - name: PROWLARR_API_KEY
           valueFrom:
             secretKeyRef:
               name: arr-api-secret
               key: PROWLARR_API
         - name: READARR_URL
-          value: {{ print "http://" .Release.Name ":8787" }}
+          value: http://arr-stack:8787
         - name: READARR_API_KEY
           valueFrom:
             secretKeyRef:

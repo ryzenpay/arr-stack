@@ -75,3 +75,12 @@ discord:
     name: arr-secret
     tokenSecretKey: DISCORD_TOKEN
     token: ""
+
+swaparr:
+  enabled: false
+  maxStrikes: 3
+  scanInterval: 10m
+  maxDownloadTime: 2h
+  ignoreAboveSize: 50GB
+  removeFromClient: true
+  strikeQueued: false

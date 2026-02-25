@@ -1,0 +1,116 @@
+{{ if .Values.swaparr.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: arr-swaparr
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: swaparr
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: swaparr
+  template:
+    metadata:
+      labels:
+        app: swaparr
+    spec:
+      containers:
+      - name: swaparr-sonarr
+        image: ghcr.io/thijmengthn/swaparr:latest
+        env:
+        - name: BASEURL
+          value: http://arr-stack:8989
+        - name: PLATFORM
+          value: sonarr
+        - name: APIKEY
+          valueFrom:
+            secretKeyRef:
+              name: arr-api-secret
+              key: SONARR_API
+        - name: MAX_STRIKES
+          value: {{ .Values.swaparr.maxStrikes | quote }}
+        - name: SCAN_INTERVAL
+          value: {{ .Values.swaparr.scanInterval | quote }}
+        - name: MAX_DOWNLOAD_TIME
+          value: {{ .Values.swaparr.maxDownloadTime | quote }}
+        - name: IGNORE_ABOVE_SIZE
+          value: {{ .Values.swaparr.ignoreAboveSize | quote }}
+        - name: REMOVE_FROM_CLIENT
+          value: {{ .Values.swaparr.removeFromClient | quote }}
+        - name: STRIKE_QUEUED
+          value: {{ .Values.swaparr.strikeQueued | quote }}
+      - name: swaparr-radarr
+        image: ghcr.io/thijmengthn/swaparr:latest
+        env:
+        - name: BASEURL
+          value: http://arr-stack:7878
+        - name: PLATFORM
+          value: radarr
+        - name: APIKEY
+          valueFrom:
+            secretKeyRef:
+              name: arr-api-secret
+              key: RADARR_API
+        - name: MAX_STRIKES
+          value: {{ .Values.swaparr.maxStrikes | quote }}
+        - name: SCAN_INTERVAL
+          value: {{ .Values.swaparr.scanInterval | quote }}
+        - name: MAX_DOWNLOAD_TIME
+          value: {{ .Values.swaparr.maxDownloadTime | quote }}
+        - name: IGNORE_ABOVE_SIZE
+          value: {{ .Values.swaparr.ignoreAboveSize | quote }}
+        - name: REMOVE_FROM_CLIENT
+          value: {{ .Values.swaparr.removeFromClient | quote }}
+        - name: STRIKE_QUEUED
+          value: {{ .Values.swaparr.strikeQueued | quote }}
+      - name: swaparr-lidarr
+        image: ghcr.io/thijmengthn/swaparr:latest
+        env:
+        - name: BASEURL
+          value: http://arr-stack:8686
+        - name: PLATFORM
+          value: lidarr
+        - name: APIKEY
+          valueFrom:
+            secretKeyRef:
+              name: arr-api-secret
+              key: LIDARR_API
+        - name: MAX_STRIKES
+          value: {{ .Values.swaparr.maxStrikes | quote }}
+        - name: SCAN_INTERVAL
+          value: {{ .Values.swaparr.scanInterval | quote }}
+        - name: MAX_DOWNLOAD_TIME
+          value: {{ .Values.swaparr.maxDownloadTime | quote }}
+        - name: IGNORE_ABOVE_SIZE
+          value: {{ .Values.swaparr.ignoreAboveSize | quote }}
+        - name: REMOVE_FROM_CLIENT
+          value: {{ .Values.swaparr.removeFromClient | quote }}
+        - name: STRIKE_QUEUED
+          value: {{ .Values.swaparr.strikeQueued | quote }}
+      - name: swaparr-readarr
+        image: ghcr.io/thijmengthn/swaparr:latest
+        env:
+        - name: BASEURL
+          value: http://arr-stack:8787
+        - name: PLATFORM
+          value: readarr
+        - name: APIKEY
+          valueFrom:
+            secretKeyRef:
+              name: arr-api-secret
+              key: READARR_API
+        - name: MAX_STRIKES
+          value: {{ .Values.swaparr.maxStrikes | quote }}
+        - name: SCAN_INTERVAL
+          value: {{ .Values.swaparr.scanInterval | quote }}
+        - name: MAX_DOWNLOAD_TIME
+          value: {{ .Values.swaparr.maxDownloadTime | quote }}
+        - name: IGNORE_ABOVE_SIZE
+          value: {{ .Values.swaparr.ignoreAboveSize | quote }}
+        - name: REMOVE_FROM_CLIENT
+          value: {{ .Values.swaparr.removeFromClient | quote }}
+        - name: STRIKE_QUEUED
+          value: {{ .Values.swaparr.strikeQueued | quote }}
+{{ end }}

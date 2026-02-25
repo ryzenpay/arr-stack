@@ -70,4 +70,7 @@ spec:
         secret:
           existing: true
           name: arr-config-secret
+      swaparr:
+        enabled: true
+        scanInterval: 5m
   defaultNamespace: media
