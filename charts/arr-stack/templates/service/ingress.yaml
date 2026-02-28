@@ -4,6 +4,10 @@ kind: Ingress
 metadata:
   name: arr-stack
   namespace: {{ .Release.Namespace }}
+{{- with .Values.ingress.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+{{- end }}
 spec:
   ingressClassName: {{ .Values.ingress.className }}
   rules:

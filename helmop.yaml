@@ -11,6 +11,8 @@ spec:
     values:
       ingress:
         domain: media.ryzen.me
+        annotations:
+          traefik.ingress.kubernetes.io/router.middlewares: media-arr-auth-middleware@kubernetescrd
       qbittorrent:
         persistent:
           size: 1Ti
@@ -65,11 +67,6 @@ spec:
           signoz.io/path: /metrics
           signoz.io/port: '7100'
           signoz.io/scrape: 'true'
-      discord:
-        enabled: true
-        secret:
-          existing: true
-          name: arr-config-secret
       swaparr:
         enabled: true
         scanInterval: 5m

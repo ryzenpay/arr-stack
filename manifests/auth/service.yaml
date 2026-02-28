@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: arr-auth
+  namespace: media
+  labels:
+    app: arr-auth
+spec:
+  type: ClusterIP
+  selector:
+    app: arr-auth
+  ports:
+  - name: http
+    port: 4181

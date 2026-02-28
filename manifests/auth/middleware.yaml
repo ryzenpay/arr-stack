@@ -1,0 +1,8 @@
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: arr-auth-middleware
+  namespace: media
+spec:
+  forwardAuth:
+    address: http://arr-auth.media.svc.cluster.local:4181
