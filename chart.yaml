@@ -1,0 +1,11 @@
+apiVersion: helm.cattle.io/v1
+kind: HelmChart
+metadata:
+  name: arr-stack
+spec:
+  chart: oci://harbor.ryzen.me/library/arr-stack
+  version: 0.2.0
+  targetNamespace: media
+  createNamespace: true
+  valuesContent: |-
+    # VALUES HERE
