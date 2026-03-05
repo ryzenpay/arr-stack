@@ -59,9 +59,11 @@ qbittorrent:
 
 arr:
   persistent:
+    existing: false
     size: 100Gi
     storageClass: ""
   config:
+    existing: false
     storageClass: ""
     size: 1Gi
   
