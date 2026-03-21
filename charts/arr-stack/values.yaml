@@ -20,19 +20,35 @@ qbittorrent:
     storageClass: ""
   vpn:
     enabled: true
-    healthcheck: true
-    config:
-      service_provider: mullvad
-      type: wireguard
-      dns: 1.1.1.1
-      cities: "" #https://raw.githubusercontent.com/qdm12/gluetun/master/internal/storage/servers.json
-    secret:
-      existing: true
-      name: arr-secret
-      privateKeySecretKey: WIREGUARD_PRIVATE_KEY
-      privateKey: ""
-      addressesSecretKey: WIREGUARD_ADDRESSES
-      addresses: ""
+    type: gluetun  # gluetun | tailscale
+    gluetun:
+      healthcheck: true
+      config:
+        service_provider: mullvad
+        type: wireguard
+        dns: 1.1.1.1
+        cities: "" #https://raw.githubusercontent.com/qdm12/gluetun/master/internal/storage/servers.json
+      secret:
+        existing: true
+        name: arr-secret
+        privateKeySecretKey: WIREGUARD_PRIVATE_KEY
+        privateKey: ""
+        addressesSecretKey: WIREGUARD_ADDRESSES
+        addresses: ""
+    tailscale:
+      loginServer: "https://script.ryzen.me"
+      exitNode: "mullvad"
+      exitNodeAllowLanAccess: true
+      hostname: "arr-qbit"
+      acceptDns: true
+      secret:
+        existing: true
+        name: tailscale-secret
+        tokenKey: headscale-token
+        token: ""
+      state:
+        storageClass: ""
+        size: 100Mi
   extraEnv: {}
   extraContainers: []
   # - name: my-sidecar

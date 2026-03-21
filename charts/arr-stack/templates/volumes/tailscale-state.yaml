@@ -1,0 +1,16 @@
+{{- if and .Values.qbittorrent.vpn.enabled (eq .Values.qbittorrent.vpn.type "tailscale") }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: tailscale-state
+  namespace: {{ .Release.Namespace }}
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: {{ .Values.qbittorrent.vpn.tailscale.state.size }}
+  {{- if .Values.qbittorrent.vpn.tailscale.state.storageClass }}
+  storageClassName: {{ .Values.qbittorrent.vpn.tailscale.state.storageClass }}
+  {{- end }}
+{{- end }}

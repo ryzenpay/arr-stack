@@ -27,9 +27,49 @@ spec:
             topologyKey: "kubernetes.io/hostname"
       securityContext:
         fsGroup: {{ .Values.pgid }}
-    {{ if .Values.qbittorrent.vpn.enabled }}
+    {{- if .Values.qbittorrent.vpn.enabled }}
       initContainers:
-      - name: wireguard
+      {{- if eq .Values.qbittorrent.vpn.type "tailscale" }}
+      - name: sysctl
+        image: busybox
+        command:
+        - sh
+        - -c
+        - sysctl -w net.ipv4.ip_forward=1 net.ipv6.conf.all.forwarding=1
+        securityContext:
+          privileged: true
+      - name: tailscale
+        image: tailscale/tailscale:latest
+        restartPolicy: Always
+        env:
+        - name: TS_AUTHKEY
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.qbittorrent.vpn.tailscale.secret.name }}
+              key: {{ .Values.qbittorrent.vpn.tailscale.secret.tokenKey }}
+        - name: TS_EXTRA_ARGS
+          value: "--login-server={{ .Values.qbittorrent.vpn.tailscale.loginServer }} --exit-node={{ .Values.qbittorrent.vpn.tailscale.exitNode }}{{- if .Values.qbittorrent.vpn.tailscale.exitNodeAllowLanAccess }} --exit-node-allow-lan-access{{- end }}"
+        - name: TS_USERSPACE
+          value: "false"
+        - name: TS_KUBE_SECRET
+          value: ""
+        - name: TS_STATE_DIR
+          value: /var/lib/tailscale
+        - name: TS_ACCEPT_DNS
+          value: {{ .Values.qbittorrent.vpn.tailscale.acceptDns | quote }}
+        - name: TS_HOSTNAME
+          value: {{ .Values.qbittorrent.vpn.tailscale.hostname }}
+        securityContext:
+          capabilities:
+            add:
+            - NET_ADMIN
+            - NET_RAW
+            - SYS_MODULE
+        volumeMounts:
+        - name: tailscale-state
+          mountPath: /var/lib/tailscale
+      {{- else }}
+      - name: gluetun
         image: qmcgaw/gluetun:latest
         securityContext:
           capabilities:
@@ -38,27 +78,28 @@ spec:
         restartPolicy: Always
         env:
           - name: VPN_SERVICE_PROVIDER
-            value: {{ .Values.qbittorrent.vpn.config.service_provider }}
+            value: {{ .Values.qbittorrent.vpn.gluetun.config.service_provider }}
           - name: VPN_TYPE
-            value: {{ .Values.qbittorrent.vpn.config.type }}
+            value: {{ .Values.qbittorrent.vpn.gluetun.config.type }}
           - name: DNS_ADDRESS
-            value: {{ .Values.qbittorrent.vpn.config.dns }}
+            value: {{ .Values.qbittorrent.vpn.gluetun.config.dns }}
           - name: FIREWALL_INPUT_PORTS
             value: {{ .Values.qbittorrent.config.web_port | quote }}
           - name: WIREGUARD_PRIVATE_KEY
             valueFrom:
               secretKeyRef:
-                name: {{ .Values.qbittorrent.vpn.secret.name }}
-                key: {{ .Values.qbittorrent.vpn.secret.privateKeySecretKey }}
+                name: {{ .Values.qbittorrent.vpn.gluetun.secret.name }}
+                key: {{ .Values.qbittorrent.vpn.gluetun.secret.privateKeySecretKey }}
           - name: WIREGUARD_ADDRESSES
             valueFrom:
               secretKeyRef:
-                name: {{ .Values.qbittorrent.vpn.secret.name }}
-                key: {{ .Values.qbittorrent.vpn.secret.addressesSecretKey }}
-        {{-  if .Values.qbittorrent.vpn.config.city }}
+                name: {{ .Values.qbittorrent.vpn.gluetun.secret.name }}
+                key: {{ .Values.qbittorrent.vpn.gluetun.secret.addressesSecretKey }}
+        {{- if .Values.qbittorrent.vpn.gluetun.config.cities }}
           - name: SERVER_CITIES
-            value: {{ .Values.qbittorrent.vpn.config.cities }}
-        {{-  end }}
+            value: {{ .Values.qbittorrent.vpn.gluetun.config.cities }}
+        {{- end }}
+        {{- if .Values.qbittorrent.vpn.gluetun.healthcheck }}
         startupProbe:
           exec:
             command:
@@ -74,7 +115,9 @@ spec:
           periodSeconds: 5
           timeoutSeconds: 5
           failureThreshold: 3
-    {{ end }}
+        {{- end }}
+      {{- end }}
+    {{- end }}
       containers:
       - name: qbittorrent
         image: lscr.io/linuxserver/qbittorrent:latest
@@ -98,31 +141,21 @@ spec:
         volumeMounts:
         - name: qbit-config
           mountPath: /config
-      {{- if .Values.qbittorrent.persistent.enabled }}
+        {{- if .Values.qbittorrent.persistent.enabled }}
         - name: qbit-data
           mountPath: /downloads
-      {{- end }}
-      {{- if .Values.qbittorrent.config.configMap }}
+        {{- end }}
+        {{- if .Values.qbittorrent.config.configMap }}
         - name: qbit-configmap
           mountPath: /config/qBittorrent
-      {{- end }}
-      {{- if .Values.qbittorrent.lifecycle }}
+        {{- end }}
+        {{- if .Values.qbittorrent.lifecycle }}
         lifecycle:
         {{- toYaml .Values.qbittorrent.lifecycle | nindent 10 }}
-      {{- end }}
+        {{- end }}
       {{- with .Values.qbittorrent.extraContainers }}
       {{- toYaml . | nindent 6 }}
       {{- end }}
-      # {{ if .Values.qbittorrent.livenessProbe }}
-      #   livenessProbe:
-      #     exec:
-      #       command:
-      #         - /bin/sh
-      #         - -c
-      #         - curl -sf http://localhost:{{ .Values.qbittorrent.config.web_port }}/api/v2/transfer/info | grep -Eq '"connection_status":"(connected|disconnected)"'
-      #     periodSeconds: 15
-      #     failureThreshold: 3
-      # {{ end }}
       volumes:
       - name: qbit-config
         persistentVolumeClaim:
@@ -136,4 +169,9 @@ spec:
       - name: qbit-configmap
         configMap:
           name: qbit-config
+      {{- end }}
+      {{- if and .Values.qbittorrent.vpn.enabled (eq .Values.qbittorrent.vpn.type "tailscale") }}
+      - name: tailscale-state
+        persistentVolumeClaim:
+          claimName: tailscale-state
       {{- end }}
