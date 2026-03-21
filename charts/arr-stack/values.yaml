@@ -30,7 +30,7 @@ qbittorrent:
         cities: "" #https://raw.githubusercontent.com/qdm12/gluetun/master/internal/storage/servers.json
       secret:
         existing: true
-        name: arr-secret
+        name: arr-config-secret
         privateKeySecretKey: WIREGUARD_PRIVATE_KEY
         privateKey: ""
         addressesSecretKey: WIREGUARD_ADDRESSES
