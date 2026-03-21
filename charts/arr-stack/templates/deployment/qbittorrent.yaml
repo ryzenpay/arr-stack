@@ -110,6 +110,9 @@ spec:
         lifecycle:
         {{- toYaml .Values.qbittorrent.lifecycle | nindent 10 }}
       {{- end }}
+      {{- with .Values.qbittorrent.extraContainers }}
+      {{- toYaml . | nindent 6 }}
+      {{- end }}
       # {{ if .Values.qbittorrent.livenessProbe }}
       #   livenessProbe:
       #     exec:

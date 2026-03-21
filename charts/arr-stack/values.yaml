@@ -34,6 +34,12 @@ qbittorrent:
       addressesSecretKey: WIREGUARD_ADDRESSES
       addresses: ""
   extraEnv: {}
+  extraContainers: []
+  # - name: my-sidecar
+  #   image: my-image:latest
+  #   env:
+  #     - name: FOO
+  #       value: bar
   lifecycle:
     postStart:
       exec:
