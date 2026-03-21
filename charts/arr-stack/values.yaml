@@ -43,7 +43,7 @@ qbittorrent:
       acceptDns: true
       secret:
         existing: true
-        name: tailscale-secret
+        name: arr-config-secret
         tokenKey: headscale-token
         token: ""
       state:
