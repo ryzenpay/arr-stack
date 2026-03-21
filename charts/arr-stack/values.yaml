@@ -28,6 +28,7 @@ qbittorrent:
         type: wireguard
         dns: 1.1.1.1
         cities: "" #https://raw.githubusercontent.com/qdm12/gluetun/master/internal/storage/servers.json
+        extraFirewallInputPorts: []  # e.g. [8118, 9050]
       secret:
         existing: true
         name: arr-config-secret

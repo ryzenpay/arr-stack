@@ -84,7 +84,7 @@ spec:
           - name: DNS_ADDRESS
             value: {{ .Values.qbittorrent.vpn.gluetun.config.dns }}
           - name: FIREWALL_INPUT_PORTS
-            value: {{ .Values.qbittorrent.config.web_port | quote }}
+            value: {{ prepend .Values.qbittorrent.vpn.gluetun.config.extraFirewallInputPorts .Values.qbittorrent.config.web_port | join "," | quote }}
           - name: WIREGUARD_PRIVATE_KEY
             valueFrom:
               secretKeyRef:
